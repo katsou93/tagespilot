@@ -26,6 +26,7 @@ import Aufgaben from './pages/Aufgaben'
 import Vitaldaten from './pages/Vitaldaten'
 import Vorfaelle from './pages/Vorfaelle'
 import Kalender from './pages/Kalender'
+import Hygiene from './pages/Hygiene'
 import './App.css'
 
 // ─── Rollenbasierte Navigation ───────────────────────────────────────────────
@@ -83,6 +84,7 @@ const NAV_BY_ROLE = {
       label: 'Qualität & System',
       items: [
         { id: 'qualitaet',    label: 'MDK & Qualität',    icon: '◈' },
+        { id: 'hygiene',      label: 'Hygieneplan',       icon: '🧼' },
         { id: 'statistik',    label: 'Statistik',         icon: '◇' },
         { id: 'einstellungen',label: 'KI-Analyse',        icon: '✦' },
         { id: 'benutzer',     label: 'Benutzer & Rollen', icon: '◎' },
@@ -221,7 +223,7 @@ const ALL_PAGES = {
   rechnung: Rechnung, qualitaet: Qualitaet,
   foerderung: Foerderung, einstellungen: Einstellungen,
   statistik: Statistik, benutzer: Benutzer, aufgaben: Aufgaben,
-  vitaldaten: Vitaldaten, vorfaelle: Vorfaelle, kalender: Kalender,
+  vitaldaten: Vitaldaten, vorfaelle: Vorfaelle, kalender: Kalender, hygiene: Hygiene,
 }
 
 export default function App() {
