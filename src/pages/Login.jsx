@@ -1,9 +1,11 @@
 import { useState } from 'react'
 
 const DEMO_USERS = [
-  { email: 'leitung@sonnenschein.de', password: 'demo2026', name: 'Claudia Berg', rolle: 'Einrichtungsleitung' },
-  { email: 'pflege@sonnenschein.de', password: 'demo2026', name: 'Maria Schulze', rolle: 'Pflegekraft' },
-  { email: 'pdl@sonnenschein.de', password: 'demo2026', name: 'Reza Ahmadi', rolle: 'Pflegedienstleitung' },
+  { email: 'leitung@sonnenschein.de',   password: 'demo2026', name: 'Claudia Berg',   rolle: 'Einrichtungsleitung' },
+  { email: 'pdl@sonnenschein.de',       password: 'demo2026', name: 'Reza Ahmadi',    rolle: 'Pflegedienstleitung' },
+  { email: 'pflege@sonnenschein.de',    password: 'demo2026', name: 'Maria Schulze',  rolle: 'Pflegekraft' },
+  { email: 'betreuung@sonnenschein.de', password: 'demo2026', name: 'Sabine Müller',  rolle: 'Betreuungskraft' },
+  { email: 'fahrer@sonnenschein.de',    password: 'demo2026', name: 'Thomas Kranz',   rolle: 'Fahrer' },
 ]
 
 export default function Login({ onLogin }) {

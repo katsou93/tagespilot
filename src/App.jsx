@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Login from './pages/Login'
-import Onboarding from './pages/Onboarding'
 import NotificationBell from './components/NotificationBell'
 import Dashboard from './pages/Dashboard'
 import Guests from './pages/Guests'
@@ -25,54 +24,185 @@ import Benutzer from './pages/Benutzer'
 import Aufgaben from './pages/Aufgaben'
 import './App.css'
 
-const NAV_GROUPS = [
-  {
-    label: 'Tagesbetrieb',
-    items: [
-      { id: 'dashboard', label: 'Übersicht', icon: '▦' },
-      { id: 'belegung', label: 'Belegungsplan', icon: '◫' },
-      { id: 'fahrtdienst', label: 'Fahrtdienst', icon: '◈' },
-      { id: 'aktivitaeten', label: 'Aktivitäten', icon: '◉' },
-      { id: 'verpflegung', label: 'Verpflegung', icon: '◎' },
-      { id: 'aufgaben', label: 'Aufgaben', icon: '◱' },
-    ]
-  },
-  {
-    label: 'Gäste & Pflege',
-    items: [
-      { id: 'guests', label: 'Stammdaten', icon: '◎' },
-      { id: 'biographie', label: 'Biographie', icon: '◈' },
-      { id: 'sis', label: 'Pflegeplanung (SIS)', icon: '✦' },
-      { id: 'dokumentation', label: 'KI-Protokoll', icon: '◈' },
-      { id: 'medikamente', label: 'Medikamente', icon: '⊕' },
-      { id: 'angehoerige', label: 'Angehörige', icon: '◉' },
-      { id: 'warteliste', label: 'Warteliste', icon: '◌' },
-    ]
-  },
-  {
-    label: 'Personal',
-    items: [
-      { id: 'dienstplan', label: 'Dienstplan & Team', icon: '◷' },
-    ]
-  },
-  {
-    label: 'Finanzen',
-    items: [
-      { id: 'abrechnung', label: 'Auswertung', icon: '◇' },
-      { id: 'rechnung', label: 'Rechnungen & GKV', icon: '◈' },
-      { id: 'foerderung', label: 'Förderantrag', icon: '◎' },
-    ]
-  },
-  {
-    label: 'Qualität & System',
-    items: [
-      { id: 'qualitaet', label: 'MDK & Qualität', icon: '◈' },
-      { id: 'statistik', label: 'Statistik & Berichte', icon: '◇' },
-      { id: 'einstellungen', label: 'KI-Analyse', icon: '✦' },
-      { id: 'benutzer', label: 'Benutzer & Rollen', icon: '◎' },
-    ]
-  },
-]
+// ─── Rollenbasierte Navigation ───────────────────────────────────────────────
+// leitung  = Einrichtungsleitung — voller Zugriff
+// pdl      = Pflegedienstleitung — Pflege + Qualität, kein Finanz-Detail/Benutzer
+// pflege   = Pflegekraft         — nur tägliche Pflegearbeit, kein Management
+// betreuung= Betreuungskraft     — Aktivitäten, Verpflegung, Dokumentation
+// fahrer   = Fahrer              — nur Fahrtdienst + Gästeliste
+// ─────────────────────────────────────────────────────────────────────────────
+
+const NAV_BY_ROLE = {
+
+  leitung: [
+    {
+      label: 'Tagesbetrieb',
+      items: [
+        { id: 'dashboard',    label: 'Übersicht',       icon: '▦' },
+        { id: 'belegung',     label: 'Belegungsplan',   icon: '◫' },
+        { id: 'fahrtdienst',  label: 'Fahrtdienst',     icon: '◈' },
+        { id: 'aktivitaeten', label: 'Aktivitäten',     icon: '◉' },
+        { id: 'verpflegung',  label: 'Verpflegung',     icon: '◎' },
+        { id: 'aufgaben',     label: 'Aufgaben',         icon: '◱' },
+      ]
+    },
+    {
+      label: 'Gäste & Pflege',
+      items: [
+        { id: 'guests',       label: 'Stammdaten',       icon: '◎' },
+        { id: 'biographie',   label: 'Biographie',       icon: '◈' },
+        { id: 'sis',          label: 'Pflegeplanung (SIS)', icon: '✦' },
+        { id: 'dokumentation',label: 'KI-Protokoll',     icon: '◈' },
+        { id: 'medikamente',  label: 'Medikamente',      icon: '⊕' },
+        { id: 'angehoerige',  label: 'Angehörige',       icon: '◉' },
+        { id: 'warteliste',   label: 'Warteliste',       icon: '◌' },
+      ]
+    },
+    {
+      label: 'Personal',
+      items: [
+        { id: 'dienstplan',   label: 'Dienstplan & Team', icon: '◷' },
+      ]
+    },
+    {
+      label: 'Finanzen',
+      items: [
+        { id: 'abrechnung',   label: 'Auswertung',        icon: '◇' },
+        { id: 'rechnung',     label: 'Rechnungen & GKV',  icon: '◈' },
+        { id: 'foerderung',   label: 'Förderantrag',      icon: '◎' },
+      ]
+    },
+    {
+      label: 'Qualität & System',
+      items: [
+        { id: 'qualitaet',    label: 'MDK & Qualität',    icon: '◈' },
+        { id: 'statistik',    label: 'Statistik',         icon: '◇' },
+        { id: 'einstellungen',label: 'KI-Analyse',        icon: '✦' },
+        { id: 'benutzer',     label: 'Benutzer & Rollen', icon: '◎' },
+      ]
+    },
+  ],
+
+  pdl: [
+    {
+      label: 'Tagesbetrieb',
+      items: [
+        { id: 'dashboard',    label: 'Übersicht',         icon: '▦' },
+        { id: 'belegung',     label: 'Belegungsplan',     icon: '◫' },
+        { id: 'aktivitaeten', label: 'Aktivitäten',       icon: '◉' },
+        { id: 'verpflegung',  label: 'Verpflegung',       icon: '◎' },
+        { id: 'aufgaben',     label: 'Aufgaben',          icon: '◱' },
+      ]
+    },
+    {
+      label: 'Gäste & Pflege',
+      items: [
+        { id: 'guests',       label: 'Stammdaten',        icon: '◎' },
+        { id: 'biographie',   label: 'Biographie',        icon: '◈' },
+        { id: 'sis',          label: 'Pflegeplanung (SIS)', icon: '✦' },
+        { id: 'dokumentation',label: 'KI-Protokoll',      icon: '◈' },
+        { id: 'medikamente',  label: 'Medikamente',       icon: '⊕' },
+        { id: 'angehoerige',  label: 'Angehörige',        icon: '◉' },
+        { id: 'warteliste',   label: 'Warteliste',        icon: '◌' },
+      ]
+    },
+    {
+      label: 'Personal',
+      items: [
+        { id: 'dienstplan',   label: 'Dienstplan & Team', icon: '◷' },
+      ]
+    },
+    {
+      // PDL sieht Auswertung aber nicht Rechnungsdetails / Förderantrag
+      label: 'Finanzen',
+      items: [
+        { id: 'abrechnung',   label: 'Auswertung',        icon: '◇' },
+      ]
+    },
+    {
+      label: 'Qualität',
+      items: [
+        { id: 'qualitaet',    label: 'MDK & Qualität',    icon: '◈' },
+        { id: 'statistik',    label: 'Statistik',         icon: '◇' },
+        { id: 'einstellungen',label: 'KI-Pflegegrad-Analyse', icon: '✦' },
+      ]
+    },
+  ],
+
+  pflege: [
+    {
+      label: 'Mein Tag',
+      items: [
+        { id: 'dashboard',    label: 'Übersicht',         icon: '▦' },
+        { id: 'fahrtdienst',  label: 'Fahrtdienst',       icon: '◈' },
+        { id: 'aktivitaeten', label: 'Aktivitäten',       icon: '◉' },
+        { id: 'verpflegung',  label: 'Verpflegung',       icon: '◎' },
+        { id: 'aufgaben',     label: 'Meine Aufgaben',    icon: '◱' },
+      ]
+    },
+    {
+      label: 'Gäste',
+      items: [
+        { id: 'guests',       label: 'Gäste',             icon: '◎' },
+        { id: 'biographie',   label: 'Biographie',        icon: '◈' },
+        { id: 'dokumentation',label: 'KI-Protokoll',      icon: '◈' },
+        { id: 'medikamente',  label: 'Medikamente',       icon: '⊕' },
+        { id: 'angehoerige',  label: 'Angehörige',        icon: '◉' },
+      ]
+    },
+    // Keine Finanzen, keine Qualität/System, kein Dienstplan, keine Warteliste, kein SIS (PDL-Aufgabe)
+  ],
+
+  betreuung: [
+    {
+      label: 'Mein Tag',
+      items: [
+        { id: 'dashboard',    label: 'Übersicht',         icon: '▦' },
+        { id: 'aktivitaeten', label: 'Aktivitäten',       icon: '◉' },
+        { id: 'verpflegung',  label: 'Verpflegung',       icon: '◎' },
+        { id: 'aufgaben',     label: 'Aufgaben',          icon: '◱' },
+      ]
+    },
+    {
+      label: 'Gäste',
+      items: [
+        { id: 'guests',       label: 'Gäste',             icon: '◎' },
+        { id: 'biographie',   label: 'Biographie',        icon: '◈' },
+        { id: 'dokumentation',label: 'KI-Protokoll',      icon: '◈' },
+        { id: 'angehoerige',  label: 'Angehörige',        icon: '◉' },
+      ]
+    },
+  ],
+
+  fahrer: [
+    {
+      label: 'Fahrtdienst',
+      items: [
+        { id: 'fahrtdienst',  label: 'Meine Route',       icon: '◈' },
+        { id: 'guests',       label: 'Gästeliste',        icon: '◎' },
+      ]
+    },
+  ],
+}
+
+// Fallback: unbekannte Rollen → Pflege-View
+const getRoleKey = (rolle) => {
+  if (!rolle) return 'pflege'
+  const r = rolle.toLowerCase()
+  if (r.includes('leitung') && !r.includes('pflege')) return 'leitung'
+  if (r.includes('pflege') && r.includes('dienst')) return 'pdl'
+  if (r.includes('fahrer')) return 'fahrer'
+  if (r.includes('betreuung')) return 'betreuung'
+  return 'pflege'
+}
+
+const ROLE_BADGE = {
+  leitung:   { label: 'Einrichtungsleitung', color: '#f87171' },
+  pdl:       { label: 'Pflegedienstleitung', color: '#7c6fff' },
+  pflege:    { label: 'Pflegekraft',         color: '#2dd4bf' },
+  betreuung: { label: 'Betreuungskraft',     color: '#4ade80' },
+  fahrer:    { label: 'Fahrer',              color: '#fbbf24' },
+}
 
 const ALL_PAGES = {
   dashboard: Dashboard, guests: Guests, belegung: Belegung,
@@ -88,17 +218,21 @@ const ALL_PAGES = {
 
 export default function App() {
   const [user, setUser] = useState(null)
-  const [onboarded, setOnboarded] = useState(false)
-  const [page, setPage] = useState('dashboard')
   const [sideOpen, setSideOpen] = useState(true)
+  const [page, setPage] = useState('dashboard')
 
-  if (!user) return <Login onLogin={(u) => setUser(u)} />
-  if (!onboarded && user.email === 'leitung@sonnenschein.de') {
-    // Skip onboarding for demo — go straight to app
-    setOnboarded(true)
-  }
+  if (!user) return <Login onLogin={(u) => { setUser(u); setPage('dashboard') }} />
 
-  const Page = ALL_PAGES[page]
+  const roleKey = getRoleKey(user.rolle)
+  const navGroups = NAV_BY_ROLE[roleKey] || NAV_BY_ROLE.pflege
+  const badge = ROLE_BADGE[roleKey]
+
+  // If current page not accessible for this role, redirect to dashboard
+  const allAllowed = navGroups.flatMap(g => g.items.map(i => i.id))
+  const activePage = allAllowed.includes(page) ? page : 'dashboard'
+  const Page = ALL_PAGES[activePage]
+
+  const initials = user.name.split(' ').map(n => n[0]).join('')
 
   return (
     <div className="app-shell">
@@ -107,8 +241,9 @@ export default function App() {
           <span className="logo-mark">CV</span>
           {sideOpen && <span className="logo-name">Carevera</span>}
         </div>
+
         <nav className="nav-list" style={{ paddingTop: 8, overflowY: 'auto', flex: 1 }}>
-          {NAV_GROUPS.map(group => (
+          {navGroups.map(group => (
             <div key={group.label} style={{ marginBottom: 4 }}>
               {sideOpen && (
                 <div style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text3)', padding: '8px 12px 4px', opacity: 0.7 }}>
@@ -116,7 +251,11 @@ export default function App() {
                 </div>
               )}
               {group.items.map(n => (
-                <button key={n.id} className={`nav-item ${page === n.id ? 'active' : ''}`} onClick={() => setPage(n.id)}>
+                <button
+                  key={n.id}
+                  className={`nav-item ${activePage === n.id ? 'active' : ''}`}
+                  onClick={() => setPage(n.id)}
+                >
                   <span className="nav-icon">{n.icon}</span>
                   {sideOpen && <span className="nav-label">{n.label}</span>}
                 </button>
@@ -124,36 +263,62 @@ export default function App() {
             </div>
           ))}
         </nav>
+
         <button className="sidebar-toggle" onClick={() => setSideOpen(v => !v)}>
           {sideOpen ? '‹' : '›'}
         </button>
+
         {sideOpen && (
           <div className="sidebar-bottom">
             <div className="facility-pill" style={{ marginBottom: 6 }}>
-              <span className="facility-dot"></span>
+              <span className="facility-dot" />
               <span>Tagespflege Sonnenschein</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', background: 'var(--bg3)', borderRadius: 7 }}>
-              <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'rgba(124,111,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 600, color: 'var(--accent2)', flexShrink: 0 }}>
-                {user.name.split(' ').map(n => n[0]).join('')}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', background: 'var(--bg3)', borderRadius: 8 }}>
+              <div style={{ width: 28, height: 28, borderRadius: '50%', background: `${badge.color}22`, border: `1.5px solid ${badge.color}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: badge.color, flexShrink: 0 }}>
+                {initials}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</div>
-                <div style={{ fontSize: 9, color: 'var(--text3)' }}>{user.rolle}</div>
+                <div style={{ fontSize: 12, fontWeight: 500, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name}</div>
+                <div style={{ fontSize: 10, color: badge.color, fontWeight: 500 }}>{badge.label}</div>
               </div>
-              <button onClick={() => setUser(null)} style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 12, padding: '2px 4px', borderRadius: 4 }} title="Abmelden">⏻</button>
+              <button
+                onClick={() => { setUser(null); setPage('dashboard') }}
+                style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 14, padding: '2px 4px', borderRadius: 4, flexShrink: 0 }}
+                title="Abmelden"
+              >⏻</button>
             </div>
           </div>
         )}
       </aside>
+
       <main className="main-content">
-        {/* Top bar */}
-        <div style={{ position: 'fixed', top: 0, right: 0, left: sideOpen ? 'var(--sidebar-w)' : 'var(--sidebar-closed)', zIndex: 50, background: 'rgba(12,12,15,0.85)', backdropFilter: 'blur(8px)', borderBottom: '1px solid var(--border)', padding: '10px 32px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, transition: 'left 0.2s' }}>
-          <button onClick={() => setPage('aufgaben')} className="btn" style={{ fontSize: 12, padding: '5px 12px', position: 'relative' }}>
-            ◱ Aufgaben
-          </button>
-          <NotificationBell />
+        {/* Topbar */}
+        <div style={{
+          position: 'fixed', top: 0, right: 0,
+          left: sideOpen ? 'var(--sidebar-w)' : 'var(--sidebar-closed)',
+          zIndex: 50, background: 'rgba(12,12,15,0.9)',
+          backdropFilter: 'blur(10px)',
+          borderBottom: '1px solid var(--border)',
+          padding: '9px 32px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          transition: 'left 0.2s',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 11, color: 'var(--text3)' }}>
+              {navGroups.flatMap(g => g.items).find(i => i.id === activePage)?.label || 'Übersicht'}
+            </span>
+          </div>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            {allAllowed.includes('aufgaben') && (
+              <button onClick={() => setPage('aufgaben')} className="btn" style={{ fontSize: 11, padding: '4px 11px' }}>
+                ◱ Aufgaben
+              </button>
+            )}
+            <NotificationBell />
+          </div>
         </div>
+
         <div style={{ paddingTop: 52 }}>
           <Page />
         </div>
