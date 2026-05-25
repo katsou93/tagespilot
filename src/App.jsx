@@ -10,12 +10,15 @@ import Medikamente from './pages/Medikamente'
 import Angehoerige from './pages/Angehoerige'
 import Aktivitaeten from './pages/Aktivitaeten'
 import Verpflegung from './pages/Verpflegung'
+import Biographie from './pages/Biographie'
 import Dienstplan from './pages/Dienstplan'
 import Abrechnung from './pages/Abrechnung'
 import Rechnung from './pages/Rechnung'
 import Qualitaet from './pages/Qualitaet'
 import Foerderung from './pages/Foerderung'
 import Einstellungen from './pages/Einstellungen'
+import Statistik from './pages/Statistik'
+import Benutzer from './pages/Benutzer'
 import './App.css'
 
 const NAV_GROUPS = [
@@ -33,8 +36,9 @@ const NAV_GROUPS = [
     label: 'Gäste & Pflege',
     items: [
       { id: 'guests', label: 'Stammdaten', icon: '◎' },
+      { id: 'biographie', label: 'Biographie', icon: '📖' },
       { id: 'sis', label: 'Pflegeplanung (SIS)', icon: '✦' },
-      { id: 'dokumentation', label: 'KI-Tagesprotokoll', icon: '◈' },
+      { id: 'dokumentation', label: 'KI-Protokoll', icon: '◈' },
       { id: 'medikamente', label: 'Medikamente', icon: '⊕' },
       { id: 'angehoerige', label: 'Angehörige', icon: '◉' },
       { id: 'warteliste', label: 'Warteliste', icon: '◌' },
@@ -55,10 +59,12 @@ const NAV_GROUPS = [
     ]
   },
   {
-    label: 'Qualität & Setup',
+    label: 'Qualität & System',
     items: [
       { id: 'qualitaet', label: 'MDK & Qualität', icon: '◈' },
-      { id: 'einstellungen', label: 'KI-Analyse & Setup', icon: '◎' },
+      { id: 'statistik', label: 'Statistik & Berichte', icon: '◇' },
+      { id: 'einstellungen', label: 'KI-Analyse', icon: '✦' },
+      { id: 'benutzer', label: 'Benutzer & Rollen', icon: '◎' },
     ]
   },
 ]
@@ -68,10 +74,11 @@ const ALL_PAGES = {
   warteliste: Warteliste, fahrtdienst: Fahrtdienst,
   dokumentation: Dokumentation, sis: SIS, medikamente: Medikamente,
   angehoerige: Angehoerige, aktivitaeten: Aktivitaeten,
-  verpflegung: Verpflegung, dienstplan: Dienstplan,
-  abrechnung: Abrechnung, rechnung: Rechnung,
-  qualitaet: Qualitaet, foerderung: Foerderung,
-  einstellungen: Einstellungen
+  verpflegung: Verpflegung, biographie: Biographie,
+  dienstplan: Dienstplan, abrechnung: Abrechnung,
+  rechnung: Rechnung, qualitaet: Qualitaet,
+  foerderung: Foerderung, einstellungen: Einstellungen,
+  statistik: Statistik, benutzer: Benutzer,
 }
 
 export default function App() {
