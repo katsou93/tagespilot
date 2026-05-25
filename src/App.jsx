@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Login from './pages/Login'
 import NotificationBell from './components/NotificationBell'
+import GlobalSearch from './components/GlobalSearch'
 import Dashboard from './pages/Dashboard'
 import Guests from './pages/Guests'
 import Belegung from './pages/Belegung'
@@ -22,6 +23,9 @@ import Einstellungen from './pages/Einstellungen'
 import Statistik from './pages/Statistik'
 import Benutzer from './pages/Benutzer'
 import Aufgaben from './pages/Aufgaben'
+import Vitaldaten from './pages/Vitaldaten'
+import Vorfaelle from './pages/Vorfaelle'
+import Kalender from './pages/Kalender'
 import './App.css'
 
 // ─── Rollenbasierte Navigation ───────────────────────────────────────────────
@@ -55,6 +59,8 @@ const NAV_BY_ROLE = {
         { id: 'dokumentation',label: 'KI-Protokoll',     icon: '◈' },
         { id: 'medikamente',  label: 'Medikamente',      icon: '⊕' },
         { id: 'angehoerige',  label: 'Angehörige',       icon: '◉' },
+        { id: 'vitaldaten',   label: 'Vitaldaten',       icon: '❤️' },
+        { id: 'vorfaelle',    label: 'Vorfälle',         icon: '⚠️' },
         { id: 'warteliste',   label: 'Warteliste',       icon: '◌' },
       ]
     },
@@ -62,6 +68,7 @@ const NAV_BY_ROLE = {
       label: 'Personal',
       items: [
         { id: 'dienstplan',   label: 'Dienstplan & Team', icon: '◷' },
+        { id: 'kalender',     label: 'Kalender',          icon: '📅' },
       ]
     },
     {
@@ -214,6 +221,7 @@ const ALL_PAGES = {
   rechnung: Rechnung, qualitaet: Qualitaet,
   foerderung: Foerderung, einstellungen: Einstellungen,
   statistik: Statistik, benutzer: Benutzer, aufgaben: Aufgaben,
+  vitaldaten: Vitaldaten, vorfaelle: Vorfaelle, kalender: Kalender,
 }
 
 export default function App() {
@@ -310,6 +318,7 @@ export default function App() {
             </span>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <GlobalSearch onNavigate={(id) => setPage(id)} />
             {allAllowed.includes('aufgaben') && (
               <button onClick={() => setPage('aufgaben')} className="btn" style={{ fontSize: 11, padding: '4px 11px' }}>
                 ◱ Aufgaben
