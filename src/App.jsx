@@ -8,10 +8,13 @@ import Dokumentation from './pages/Dokumentation'
 import SIS from './pages/SIS'
 import Medikamente from './pages/Medikamente'
 import Angehoerige from './pages/Angehoerige'
+import Aktivitaeten from './pages/Aktivitaeten'
+import Verpflegung from './pages/Verpflegung'
 import Dienstplan from './pages/Dienstplan'
 import Abrechnung from './pages/Abrechnung'
 import Rechnung from './pages/Rechnung'
 import Qualitaet from './pages/Qualitaet'
+import Foerderung from './pages/Foerderung'
 import Einstellungen from './pages/Einstellungen'
 import './App.css'
 
@@ -22,6 +25,8 @@ const NAV_GROUPS = [
       { id: 'dashboard', label: 'Übersicht', icon: '▦' },
       { id: 'belegung', label: 'Belegungsplan', icon: '◫' },
       { id: 'fahrtdienst', label: 'Fahrtdienst', icon: '◈' },
+      { id: 'aktivitaeten', label: 'Aktivitäten', icon: '◉' },
+      { id: 'verpflegung', label: 'Verpflegung', icon: '◎' },
     ]
   },
   {
@@ -46,10 +51,11 @@ const NAV_GROUPS = [
     items: [
       { id: 'abrechnung', label: 'Auswertung', icon: '◇' },
       { id: 'rechnung', label: 'Rechnungen & GKV', icon: '◈' },
+      { id: 'foerderung', label: 'Förderantrag', icon: '◎' },
     ]
   },
   {
-    label: 'Qualität',
+    label: 'Qualität & Setup',
     items: [
       { id: 'qualitaet', label: 'MDK & Qualität', icon: '◈' },
       { id: 'einstellungen', label: 'KI-Analyse & Setup', icon: '◎' },
@@ -61,9 +67,11 @@ const ALL_PAGES = {
   dashboard: Dashboard, guests: Guests, belegung: Belegung,
   warteliste: Warteliste, fahrtdienst: Fahrtdienst,
   dokumentation: Dokumentation, sis: SIS, medikamente: Medikamente,
-  angehoerige: Angehoerige, dienstplan: Dienstplan,
+  angehoerige: Angehoerige, aktivitaeten: Aktivitaeten,
+  verpflegung: Verpflegung, dienstplan: Dienstplan,
   abrechnung: Abrechnung, rechnung: Rechnung,
-  qualitaet: Qualitaet, einstellungen: Einstellungen
+  qualitaet: Qualitaet, foerderung: Foerderung,
+  einstellungen: Einstellungen
 }
 
 export default function App() {
